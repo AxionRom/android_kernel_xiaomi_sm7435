@@ -5004,7 +5004,7 @@ static ssize_t cgroup_procs_write(struct kernfs_open_file *of,
 	ret = cgroup_attach_task(dst_cgrp, task, true);
 
 	/* This covers boosting for app launches and app transitions */
-	if (!ret && !threadgroup &&
+	if (!ret &&
 		!memcmp(of->kn->parent->name, "top-app", sizeof("top-app")) &&
 		task_is_zygote(task->parent) && kp_active_mode() == 3) {
 		cpu_boost_max(250);

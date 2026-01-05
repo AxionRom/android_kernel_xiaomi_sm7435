@@ -3014,6 +3014,16 @@ __call_rcu(struct rcu_head *head, rcu_callback_t func)
 	}
 }
 
+#ifdef CONFIG_RCU_LAZY
+static bool enable_rcu_lazy __read_mostly = !IS_ENABLED(CONFIG_RCU_LAZY_DEFAULT_OFF);
+module_param(enable_rcu_lazy, bool, 0444);
+
+void rcu_lazy_set_enabled(bool enable)
+{
+	WRITE_ONCE(enable_rcu_lazy, enable);
+}
+EXPORT_SYMBOL_GPL(rcu_lazy_set_enabled);
+#endif /* CONFIG_RCU_LAZY */
 /**
  * call_rcu() - Queue an RCU callback for invocation after a grace period.
  * @head: structure to be used for queueing the RCU updates.
