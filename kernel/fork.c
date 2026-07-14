@@ -98,7 +98,6 @@
 #include <linux/io_uring.h>
 #include <linux/cpufreq_times.h>
 #include <linux/cpu_boost.h>
-#include <soc/qcom/dcvs_boost.h>
 
 #include <asm/pgalloc.h>
 #include <linux/uaccess.h>
@@ -2624,15 +2623,8 @@ pid_t kernel_clone(struct kernel_clone_args *args)
 		return -EINVAL;
 
 	/* Boost CPUs to the max for 50 ms when userspace launches an app */
-	if (task_is_zygote(current) && kp_active_mode() != 1) {
-		if (kp_active_mode() == 3) {
-			qcom_dcvs_bus_boost_kick_max(250);
-			cpu_boost_max(250);
-		} else {
-			qcom_dcvs_bus_boost_kick(250);
-			cpu_boost_kick(250);
-		}
-	}
+	if (task_is_zygote(current) && kp_active_mode() != 1)
+		cpu_boost_max(50);
 
 	/*
 	 * Determine whether and which event to report to ptracer.  When

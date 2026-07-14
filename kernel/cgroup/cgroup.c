@@ -60,7 +60,6 @@
 #include <linux/psi.h>
 #include <linux/binfmts.h>
 #include <linux/cpu_boost.h>
-#include <soc/qcom/dcvs_boost.h>
 #include <net/sock.h>
 
 #define CREATE_TRACE_POINTS
@@ -5008,17 +5007,15 @@ static ssize_t cgroup_procs_write(struct kernfs_open_file *of,
 	ret = cgroup_attach_task(dst_cgrp, task, true);
 
 	/* This covers boosting for app launches and app transitions */
-	if (!ret && !threadgroup &&
+	if (!ret && 
 		!memcmp(of->kn->parent->name, "top-app", sizeof("top-app")) &&
 		task_is_zygote(task->parent) && kp_active_mode() != 1) {
 		switch (kp_active_mode()) {
 		case 3:
-			qcom_dcvs_bus_boost_kick_max(3000);
-			cpu_boost_max(2000);
+			cpu_boost_max(1500);
 			break;
 		default:
-			qcom_dcvs_bus_boost_kick(3000);
-			cpu_boost_kick(2000);
+			cpu_boost_max(750);
 			break;
 		}
 	}
