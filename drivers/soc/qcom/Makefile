@@ -111,7 +111,6 @@ obj-$(CONFIG_QTI_PLH_SCMI_CLIENT) += plh_scmi.o
 obj-$(CONFIG_QTI_GPLAF_SCMI_CLIENT) += gplaf_scmi.o
 obj-$(CONFIG_QTI_SHARED_RAIL_CLIENT) += shared_rail_scmi.o
 obj-$(CONFIG_QCOM_QDSS_BRIDGE) += qdss_bridge.o
-obj-$(CONFIG_QCOM_DCVS_BOOST_API)	+= dcvs_boost_api.o
 obj-$(CONFIG_QCOM_DCVS) += dcvs/
 obj-$(CONFIG_QCOM_CPU_VENDOR_HOOKS) += qcom_cpu_vendor_hooks.o
 obj-$(CONFIG_QCOM_LOGBUF_VENDOR_HOOKS) += qcom_logbuf_vendor_hooks.o
