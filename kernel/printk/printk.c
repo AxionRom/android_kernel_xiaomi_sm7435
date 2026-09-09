@@ -755,6 +755,15 @@ static ssize_t devkmsg_write(struct kiocb *iocb, struct iov_iter *from)
 		}
 	}
 
+	if (strncmp(line, "healthd:", strlen("healthd:")) == 0)
+		goto skip_write;
+
+#ifdef CONFIG_SECURITY
+	if (disable_audit_log)
+		if (strncmp(line, "SELinux: avc:", strlen("SELinux: avc:")) == 0)
+			goto skip_write;
+#endif
+
 	devkmsg_emit(facility, level, "%s", line);
 	kfree(buf);
 	return ret;
@@ -1992,6 +2001,10 @@ int vprintk_store(int facility, int level,
 	 * prefix which might be passed-in as a parameter.
 	 */
 	text_len = vscnprintf(text, sizeof(textbuf), fmt, args);
+
+	if (strstr(text, "[mi_disp") != NULL ||
+	    strstr(text, "[drm") != NULL)
+		return 0;
 
 	/* mark and strip a trailing newline */
 	if (text_len && text[text_len-1] == '\n') {
